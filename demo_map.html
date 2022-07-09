@@ -62,12 +62,6 @@
   });
   map.add(stdm1_entry_gate);
 
-  //Trailheads feature layer (points)
-  const trailheadsLayer = new FeatureLayer({
-    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
-  });
-   map.add(trailheadsLayer);
-
       const basemapToggle = new BasemapToggle({
         view: view,
         nextBasemap: "arcgis-imagery"
