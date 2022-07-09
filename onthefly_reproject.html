@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>GeoJSONLayer | Sample | ArcGIS API for JavaScript 4.24</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.24/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.24/"></script>
+
+    <script>
+      require(["esri/Map", "esri/layers/GeoJSONLayer", "esri/views/MapView","esri/geometry/SpatialReference"], (
+        Map,
+        GeoJSONLayer,
+        MapView,
+		SpatialReference
+      ) => {
+        const url =
+          "file:///C:/Users/amitk/Documents/Amit_Dev/GitHub/Map_Development/doha.geojson";
+		var qatWKID = 4326;	
+		qatSpaRef =  new SpatialReference({wkid:qatWKID});	
+        const template = {
+          title: "Earthquake Info",
+          content: "Magnitude {mag} {type} hit {place} on {time}",
+          fieldInfos: [
+            {
+              fieldName: "time",
+              format: {
+                dateFormat: "short-date-short-time"
+              }
+            }
+          ]
+        };
+
+        const renderer = {
+          type: "simple",
+          field: "mag",
+          symbol: {
+            type: "simple-marker",
+            color: "orange",
+            outline: {
+              color: "white"
+            }
+          },
+          visualVariables: [
+            {
+              type: "size",
+              field: "mag",
+              stops: [
+                {
+                  value: 2.5,
+                  size: "4px"
+                },
+                {
+                  value: 8,
+                  size: "40px"
+                }
+              ]
+            }
+          ]
+        };
+
+        const geojsonLayer = new GeoJSONLayer({
+          url: url,
+          copyright: "USGS Earthquakes",
+          popupTemplate: template,
+          renderer: renderer,
+		  spatialReference: qatSpaRef,
+          orderBy: {
+            field: "mag"
+          }
+        });
+		
+		console.log(geojsonLayer);
+
+        const map = new Map({
+          basemap: "gray-vector",
+          layers: [geojsonLayer]
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          center: [-168, 46],
+          zoom: 2,
+          map: map
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>

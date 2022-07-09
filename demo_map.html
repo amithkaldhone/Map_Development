@@ -1,31 +1,86 @@
-<!DOCTYPE html>
 <html>
-   <head>
-       <h1> My First Map </h1>
-       <h2> Basic functions </h2>
-      <title>Leaflet Map</title>
-      <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
-      <script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-   </head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>ArcGIS API for JavaScript Tutorials: Add a feature layer</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.24/"></script>
 
-   <body>
-      <div id = "map" style = "width: 900px; height: 580px"></div>
-      <script>
-         // Creating map options
-         var mapOptions = {
-            center: [17.0230972, 74.6977952],
-            zoom: 10
-         }
-        
-         // Creating a map object
-         var map = new L.map('map', mapOptions);
-         
-         // Creating a Layer object
-         var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-         
-         // Adding layer to the map
-         map.addLayer(layer);
-      </script>
-   </body>
-   
+  <script>
+  require([
+    "esri/config",
+    "esri/Map",
+    "esri/views/MapView",
+    "esri/layers/FeatureLayer",
+    "esri/widgets/BasemapToggle",
+    "esri/widgets/BasemapGallery",
+    "esri/geometry/SpatialReference"    
+  ], 
+  function(esriConfig,Map, MapView,FeatureLayer,BasemapToggle,BasemapGallery,SpatialReference) {
+    //esriConfig.apiKey = "YOUR_API_KEY";
+
+  const map = new Map({
+        basemap: "arcgis-topographic"
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        //center: [73.706423,18.673973], //Pune
+        center: [-118.80543,34.02700], //US
+        zoom: 16
+      });
+      //var PuneWKID = 4326;	
+		  //punespatialref =  new SpatialReference({wkid:PuneWKID});
+
+  
+  const stdm1_area = new FeatureLayer({
+    url: "https://services2.arcgis.com/TeTTamQCm6YlaMZf/arcgis/rest/services/stdm1_area/FeatureServer"
+  });
+  map.add(stdm1_area);
+
+  const stdm1_toilets = new FeatureLayer({
+    url: "https://services2.arcgis.com/TeTTamQCm6YlaMZf/arcgis/rest/services/stdm1_toilets/FeatureServer"
+  });
+  map.add(stdm1_toilets);
+
+  const stdm1_ticket_counters = new FeatureLayer({
+    url: "https://services2.arcgis.com/TeTTamQCm6YlaMZf/arcgis/rest/services/stdm1_ticket_counters/FeatureServer"
+  });
+  map.add(stdm1_ticket_counters);
+
+  const stdm1_entry_gate = new FeatureLayer({
+    url: "https://services2.arcgis.com/TeTTamQCm6YlaMZf/arcgis/rest/services/stdm1_entry_gate/FeatureServer"
+  });
+  map.add(stdm1_entry_gate);
+
+  //Trailheads feature layer (points)
+  const trailheadsLayer = new FeatureLayer({
+    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
+  });
+   map.add(trailheadsLayer);
+
+      const basemapToggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "arcgis-imagery"
+     });
+
+      view.ui.add(basemapToggle,"bottom-right");
+
+
+  });
+</script>
+
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
 </html>
